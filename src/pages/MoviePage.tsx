@@ -29,12 +29,40 @@ const Movie = styled(motion.div)`
 	/* background-color: orange; */
 	margin: 20px;
 	text-align: center;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+`;
+
+const Info = styled.div`
+	min-width: 100%;
+	height: 100%;
+	opacity: 0;
+	background-color: black;
+	position: absolute;
+	border-radius: 15px;
+	display: flex;
+	text-align: center;
+	flex-direction: column;
+	z-index: 3;
+	pointer-events: none;
 `;
 
 const Img = styled(motion.img)`
-	width: 200px;
+	width: 100%;
 	height: auto;
 	border-radius: 15px;
+	z-index: 2;
+`;
+
+const ImgHover = styled(Img)`
+	&:hover ~ ${Info} {
+		opacity: 0.8;
+		transition: 0.5s;
+		scale: 1.1;
+		height: 300px;
+		top: -50px;
+	}
 `;
 
 const Text = styled.p`
@@ -105,8 +133,35 @@ const MoviePage: React.FC = () => {
 		>
 			{data.results.map((movie: any) => (
 				<Movie key={movie.id} variants={item}>
-					<Img src={makeImagePath(movie.poster_path)}></Img>
+					<ImgHover
+						src={makeImagePath(movie.poster_path)}
+						variants={img}
+						whileHover="whileHover"
+					></ImgHover>
 					<Text>{movie.title}</Text>
+					<Info>
+						<p style={{ color: "yellow", fontSize: "20px", marginTop: "20px" }}>
+							{movie.title}
+						</p>
+						<p style={{ marginTop: "20px" }}>{movie.release_date}</p>
+						<p style={{ marginTop: "20px", fontSize: "14px" }}>
+							{movie.overview.slice(0, 100) + "..."}
+						</p>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "space-around",
+								// marginTop: "20px",
+								position: "absolute",
+								bottom: "10px",
+								width: "100%",
+							}}
+						>
+							<p>{movie.vote_average}</p>
+							<p>{`(${movie.vote_count})`}</p>
+						</div>
+						{/* <div>{movie.adult.toString()}</div> */}
+					</Info>
 				</Movie>
 			))}
 		</MovieContainer>
