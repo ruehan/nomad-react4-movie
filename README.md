@@ -4,11 +4,11 @@
 
 ## Requirements
 
-- [ ] Home Page
+- [x] Home Page
 
-- [ ] Coming Soon Page
+- [x] Coming Soon Page
 
-- [ ] Now Playing Page
+- [x] Now Playing Page
 
 - [ ] When a movie is clicked, create a modal that displays the movie's detail.
 
@@ -24,9 +24,9 @@
 
 - [ ] Search Bar (Title / Genre)
 
-- [ ] Vote Average & Vote Count
+- [x] Vote Average & Vote Count
 
-- [ ] Release Date
+- [x] Release Date
 
 - [x] Poster
 
