@@ -20,8 +20,6 @@
 
 ### Common (Popular / Coming Soon / Now Playing)
 
-- [ ] Infinity Scroll
-
 - [ ] Search Bar (Title / Genre)
 
 - [x] Vote Average & Vote Count
@@ -30,23 +28,23 @@
 
 - [x] Poster
 
-- [ ] Adult Warning
-
 ### Detail Page
 
-- [ ] Collection
+- [x] Collection
 
-- [ ] Genres
+- [x] Genres
 
-- [ ] Runtime
+- [x] Runtime
 
 - [ ] Status
 
-- [ ] Overview
+- [x] Overview
 
-- [ ] Title
+- [x] Title
 
-- [ ] Vote Average & Vote Count
+- [x] Vote Average & Vote Count
+
+- [ ] Overview Translate
 
 ### MY Page
 
