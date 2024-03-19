@@ -4,7 +4,11 @@ import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
 import { useEffect } from "react";
-import { imgState } from "../../state/imgState";
+import { MdGTranslate as Translate } from "react-icons/md";
+import {
+	MdLightMode as LightMode,
+	MdDarkMode as DarkMode,
+} from "react-icons/md";
 
 const Tabs = styled.ul`
 	width: 100%;
@@ -22,7 +26,8 @@ const Tab = styled.li`
 	display: flex;
 	position: relative;
 	justify-content: center;
-	flex-direction: column;
+	align-items: center;
+	/* flex-direction: column; */
 	font-size: 22px;
 `;
 
@@ -40,7 +45,6 @@ const Circle = styled(motion.span)`
 
 const NavBar: React.FC = () => {
 	const [, setTab] = useRecoilState(tabState);
-	const [, setIsImg] = useRecoilState(imgState);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -58,7 +62,6 @@ const NavBar: React.FC = () => {
 
 	const onClick = (event: any) => {
 		setTab(event.target.innerText);
-		setIsImg(false);
 		localStorage.setItem("tab", event.target.innerText);
 	};
 
@@ -84,10 +87,12 @@ const NavBar: React.FC = () => {
 					</Link>
 				</Tab>
 				<Tab>
-					<Link to="/my" onClick={onClick}>
+					{/* <Translate /> */}
+					<DarkMode />
+					{/* <Link to="/my" onClick={onClick}>
 						MY
 						{myMatch && <Circle layoutId="circle" />}
-					</Link>
+					</Link> */}
 				</Tab>
 			</Tabs>
 		</>
