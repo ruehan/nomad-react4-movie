@@ -9,12 +9,11 @@ import { useRecoilState } from "recoil";
 import { tabState } from "../state/tabState";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
+import { FaStar as Star } from "react-icons/fa6";
 
 const MovieContainer = styled(motion.div)`
 	display: flex;
-	/* width: 90%; */
-	/* height:  */
-	margin-top: 100px;
+	margin-top: 50px;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
@@ -26,7 +25,6 @@ const Movie = styled(motion.div)`
 	min-width: 200px;
 	max-width: 200px;
 	min-height: 300px;
-	/* background-color: orange; */
 	margin: 20px;
 	text-align: center;
 	position: relative;
@@ -151,13 +149,21 @@ const MoviePage: React.FC = () => {
 							style={{
 								display: "flex",
 								justifyContent: "space-around",
-								// marginTop: "20px",
 								position: "absolute",
 								bottom: "10px",
 								width: "100%",
 							}}
 						>
-							<p>{movie.vote_average}</p>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: " center",
+									alignItems: "center",
+								}}
+							>
+								<Star style={{ marginRight: "5px", color: "yellow" }} />
+								<p>{movie.vote_average}</p>
+							</div>
 							<p>{`(${movie.vote_count})`}</p>
 						</div>
 						{/* <div>{movie.adult.toString()}</div> */}
