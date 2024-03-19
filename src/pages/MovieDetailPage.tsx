@@ -1,11 +1,11 @@
 import { useRecoilState } from "recoil";
-import { modalState, movieState } from "../state/movieState";
+import { movieState } from "../state/movieState";
 import { useQuery } from "react-query";
 import { getMovie, makeBgPath } from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { MdOutlineWebAsset as WebSite } from "react-icons/md";
-import translateText from "../api/deepl";
+// import translateText from "../api/deepl";
 
 const Container = styled(motion.div)`
 	width: 80%;
@@ -41,9 +41,9 @@ const BackImg = styled.img`
 `;
 
 const MovieDetailPage: React.FC = () => {
-	const [movieId, setMovieId] = useRecoilState(movieState);
+	const [movieId] = useRecoilState(movieState);
 
-	const { isLoading, isError, data, error } = useQuery(
+	const { isLoading, data } = useQuery(
 		["id", movieId],
 		({ queryKey }) => getMovie(queryKey[1]),
 		{
@@ -52,9 +52,6 @@ const MovieDetailPage: React.FC = () => {
 			onSuccess: (data) => {
 				console.log(data);
 				console.log("Movie Detail Page Load");
-			},
-			onError: (e) => {
-				console.log(e.message);
 			},
 		}
 	);

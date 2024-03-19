@@ -1,10 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 import PopularPage from "./pages/MoviePage";
-import NavBar from "./components/nav/NavBar";
 
 const GlobalStyle = createGlobalStyle`
-
-  @import url('https://fonts.googleapis.com/css2?family=Gasoek+One&display=swap');
     
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -40,13 +37,17 @@ const GlobalStyle = createGlobalStyle`
   html{
 	width: 100%;
 	height: 100vh;
+
   }
 
   body {
     line-height: 1;
     background-color: #040404;
-	color: white;
-    justify-content: center;
+	  color: white;
+    /* justify-content: center; */
+      /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
   }
   menu, ol, ul {
     list-style: none;

@@ -11,10 +11,8 @@ import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import { FaStar as Star } from "react-icons/fa6";
 import { modalState, movieState, scrollState } from "../state/movieState";
-import { useNavigate } from "react-router-dom";
 import MovieDetailPage from "./MovieDetailPage";
 import { useEffect } from "react";
-import { allowScroll, preventScroll } from "../utils/modal";
 
 const MovieContainer = styled(motion.div)`
 	display: flex;
@@ -85,7 +83,7 @@ const container = {
 };
 
 const MoviePage: React.FC = () => {
-	const [tab, setTab] = useRecoilState(tabState);
+	const [tab] = useRecoilState(tabState);
 	const [, setMovie] = useRecoilState(movieState);
 	const [modal, setModal] = useRecoilState(modalState);
 	const [scroll, setScroll] = useRecoilState(scrollState);
@@ -107,7 +105,7 @@ const MoviePage: React.FC = () => {
 		window.scrollTo(0, prevScrollY);
 	};
 
-	const { isLoading, isError, data, error } = useQuery(
+	const { isLoading, data } = useQuery(
 		tab === "POPULAR"
 			? "popular"
 			: tab === "COMING SOON"
@@ -123,9 +121,6 @@ const MoviePage: React.FC = () => {
 			retry: 0,
 			onSuccess: (data) => {
 				console.log(data.results);
-			},
-			onError: (e) => {
-				// console.log(e.message);
 			},
 		}
 	);

@@ -4,9 +4,8 @@ import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
 import { useEffect } from "react";
-import { MdGTranslate as Translate } from "react-icons/md";
 import {
-	MdLightMode as LightMode,
+	// MdLightMode as LightMode,
 	MdDarkMode as DarkMode,
 } from "react-icons/md";
 
@@ -49,7 +48,6 @@ const NavBar: React.FC = () => {
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
 	const nowPlayingMatch = useMatch("now-playing");
-	const myMatch = useMatch("my");
 
 	useEffect(() => {
 		try {
