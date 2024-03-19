@@ -1,17 +1,21 @@
 import { motion } from "framer-motion";
-import { Link, Outlet, useMatch } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
 import { useEffect } from "react";
+import { imgState } from "../../state/imgState";
 
 const Tabs = styled.ul`
 	width: 100%;
 	height: 50px;
-	/* background-color: white; */
+	background-color: #040404;
 	display: flex;
-	margin-top: 20px;
 	justify-content: space-around;
+	position: sticky;
+	top: 0px;
+	padding: 10px;
+	z-index: 5;
 `;
 
 const Tab = styled.li`
@@ -24,7 +28,7 @@ const Tab = styled.li`
 
 const Circle = styled(motion.span)`
 	position: absolute;
-	width: 60px;
+	width: 20px;
 	height: 7px;
 	background-color: #ec6b5d;
 	bottom: -15px;
@@ -36,6 +40,7 @@ const Circle = styled(motion.span)`
 
 const NavBar: React.FC = () => {
 	const [, setTab] = useRecoilState(tabState);
+	const [, setIsImg] = useRecoilState(imgState);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -53,6 +58,7 @@ const NavBar: React.FC = () => {
 
 	const onClick = (event: any) => {
 		setTab(event.target.innerText);
+		setIsImg(false);
 		localStorage.setItem("tab", event.target.innerText);
 	};
 
@@ -84,7 +90,6 @@ const NavBar: React.FC = () => {
 					</Link>
 				</Tab>
 			</Tabs>
-			{/* <Outlet /> */}
 		</>
 	);
 };
