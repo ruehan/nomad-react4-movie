@@ -10,6 +10,11 @@ import { tabState } from "../state/tabState";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import { FaStar as Star } from "react-icons/fa6";
+import { modalState, movieState, scrollState } from "../state/movieState";
+import { useNavigate } from "react-router-dom";
+import MovieDetailPage from "./MovieDetailPage";
+import { useEffect } from "react";
+import { allowScroll, preventScroll } from "../utils/modal";
 
 const MovieContainer = styled(motion.div)`
 	display: flex;
@@ -81,6 +86,26 @@ const container = {
 
 const MoviePage: React.FC = () => {
 	const [tab, setTab] = useRecoilState(tabState);
+	const [, setMovie] = useRecoilState(movieState);
+	const [modal, setModal] = useRecoilState(modalState);
+	const [scroll, setScroll] = useRecoilState(scrollState);
+
+	const preventScroll = () => {
+		const currentScrollY = window.scrollY;
+		document.body.style.position = "fixed";
+		document.body.style.width = "100%";
+		document.body.style.top = `-${currentScrollY}px`;
+		document.body.style.overflowY = "scroll";
+		setScroll(currentScrollY);
+	};
+
+	const allowScroll = (prevScrollY: number) => {
+		document.body.style.position = "";
+		document.body.style.width = "";
+		document.body.style.top = "";
+		document.body.style.overflowY = "";
+		window.scrollTo(0, prevScrollY);
+	};
 
 	const { isLoading, isError, data, error } = useQuery(
 		tab === "POPULAR"
@@ -105,6 +130,34 @@ const MoviePage: React.FC = () => {
 		}
 	);
 
+	useEffect(() => {
+		if (modal) {
+			preventScroll();
+		} else {
+			allowScroll(scroll);
+		}
+	}, [modal, setModal]);
+
+	// useEffect(() => {
+	// 	const prevScrollY = preventScroll();
+	// 	return () => {
+	// 		allowScroll(prevScrollY);
+	// 	};
+	// }, []);
+
+	function OpenModal(id: any) {
+		setMovie(id);
+		setModal(true);
+		console.log(id);
+		console.log(modal);
+	}
+
+	function CloseModal() {
+		if (modal) {
+			setModal(false);
+		}
+	}
+
 	const item = {
 		hidden: { y: 20, opacity: 0 },
 		visible: {
@@ -123,54 +176,60 @@ const MoviePage: React.FC = () => {
 	if (isLoading) return null;
 
 	return (
-		<MovieContainer
-			key={tab}
-			variants={container}
-			initial="hidden"
-			animate="visible"
-		>
-			{data.results.map((movie: any) => (
-				<Movie key={movie.id} variants={item}>
-					<ImgHover
-						src={makeImagePath(movie.poster_path)}
-						variants={img}
-						whileHover="whileHover"
-					></ImgHover>
-					<Text>{movie.title}</Text>
-					<Info>
-						<p style={{ color: "yellow", fontSize: "20px", marginTop: "20px" }}>
-							{movie.title}
-						</p>
-						<p style={{ marginTop: "20px" }}>{movie.release_date}</p>
-						<p style={{ marginTop: "20px", fontSize: "14px" }}>
-							{movie.overview.slice(0, 100) + "..."}
-						</p>
-						<div
-							style={{
-								display: "flex",
-								justifyContent: "space-around",
-								position: "absolute",
-								bottom: "10px",
-								width: "100%",
-							}}
-						>
+		<>
+			<MovieContainer
+				key={tab}
+				variants={container}
+				initial="hidden"
+				animate="visible"
+				onClick={CloseModal}
+			>
+				{data.results.map((movie: any) => (
+					<Movie key={movie.id} variants={item}>
+						<ImgHover
+							src={makeImagePath(movie.poster_path)}
+							variants={img}
+							whileHover="whileHover"
+							onClick={() => OpenModal(movie.id)}
+						></ImgHover>
+						<Text>{movie.title}</Text>
+						<Info>
+							<p
+								style={{ color: "yellow", fontSize: "20px", marginTop: "20px" }}
+							>
+								{movie.title}
+							</p>
+							<p style={{ marginTop: "20px" }}>{movie.release_date}</p>
+							<p style={{ marginTop: "20px", fontSize: "14px" }}>
+								{movie.overview.slice(0, 100) + "..."}
+							</p>
 							<div
 								style={{
 									display: "flex",
-									justifyContent: " center",
-									alignItems: "center",
+									justifyContent: "space-around",
+									position: "absolute",
+									bottom: "10px",
+									width: "100%",
 								}}
 							>
-								<Star style={{ marginRight: "5px", color: "yellow" }} />
-								<p>{movie.vote_average}</p>
+								<div
+									style={{
+										display: "flex",
+										justifyContent: " center",
+										alignItems: "center",
+									}}
+								>
+									<Star style={{ marginRight: "5px", color: "yellow" }} />
+									<p>{movie.vote_average}</p>
+								</div>
+								<p>{`(${movie.vote_count})`}</p>
 							</div>
-							<p>{`(${movie.vote_count})`}</p>
-						</div>
-						{/* <div>{movie.adult.toString()}</div> */}
-					</Info>
-				</Movie>
-			))}
-		</MovieContainer>
+						</Info>
+					</Movie>
+				))}
+			</MovieContainer>
+			{modal && <MovieDetailPage />}
+		</>
 	);
 };
 
