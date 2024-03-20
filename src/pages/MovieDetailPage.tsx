@@ -1,11 +1,15 @@
 import { useRecoilState } from "recoil";
-import { movieState } from "../state/movieState";
+import {
+	movieState,
+	translateState,
+	translateTextState,
+} from "../state/movieState";
 import { useQuery } from "react-query";
 import { getMovie, makeBgPath } from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { MdOutlineWebAsset as WebSite } from "react-icons/md";
-// import translateText from "../api/deepl";
+import axios from "axios";
 
 const Container = styled(motion.div)`
 	width: 80%;
@@ -42,6 +46,19 @@ const BackImg = styled.img`
 
 const MovieDetailPage: React.FC = () => {
 	const [movieId] = useRecoilState(movieState);
+	const [isTranslate] = useRecoilState(translateState);
+	const [translatedText, setTranslatedText] =
+		useRecoilState(translateTextState);
+
+	const translateText = async (text: any) => {
+		const AUTH_KEY = process.env.REACT_APP_DEEPL_AUTH_KEY;
+
+		const url = `https://api-free.deepl.com/v2/translate?auth_key=${AUTH_KEY}&text=${text}&source_lang=EN&target_lang=KO`;
+
+		axios.get(url).then((response) => {
+			setTranslatedText(response.data.translations[0].text);
+		});
+	};
 
 	const { isLoading, data } = useQuery(
 		["id", movieId],
@@ -52,14 +69,14 @@ const MovieDetailPage: React.FC = () => {
 			onSuccess: (data) => {
 				console.log(data);
 				console.log("Movie Detail Page Load");
+				if (isTranslate) {
+					translateText(data.overview);
+				}
 			},
 		}
 	);
 
 	if (isLoading) return null;
-
-	// translateText(data.overview);
-
 	// genres / homepage / imdb_id / production_countries / revenue / runtime / spoken_langages / status
 
 	return (
@@ -96,7 +113,7 @@ const MovieDetailPage: React.FC = () => {
 					))}
 				</div>
 				<div>{data.release_date}</div>
-				<div>{data.overview}</div>
+				{isTranslate ? <div>{translatedText}</div> : <div>{data.overview}</div>}
 				<div>
 					{data.genres.map((genre: any) => (
 						<div>{genre.name}</div>
