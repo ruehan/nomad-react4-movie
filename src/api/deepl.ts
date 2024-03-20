@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useRecoilState } from "recoil";
-import { translateState, translateTextState } from "../state/movieState";
+import { translateTextState } from "../state/movieState";
 
 const translateText = async (text: any) => {
-	const [, isTranslate] = useRecoilState(translateState);
 	const [, setTranslatedText] = useRecoilState(translateTextState);
 
 	const AUTH_KEY = process.env.REACT_APP_DEEPL_AUTH_KEY;
