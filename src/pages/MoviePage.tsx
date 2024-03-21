@@ -1,8 +1,5 @@
 import { useQuery } from "react-query";
 import {
-	getComingSoon,
-	getNowPlaying,
-	getPopular,
 	getTMDBNowPlaying,
 	getTMDBPopular,
 	makeImagePath,
