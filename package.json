@@ -13,6 +13,8 @@
 		"axios": "^1.6.8",
 		"deepl-node": "^1.12.0",
 		"framer-motion": "^11.0.14",
+		"google-translate-api-browser": "^4.3.2",
+		"google-translate-api-x": "^10.6.8",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-icons": "^5.0.1",
