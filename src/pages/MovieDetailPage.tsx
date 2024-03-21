@@ -1,15 +1,10 @@
 import { useRecoilState } from "recoil";
-import {
-	movieState,
-	translateState,
-	translateTextState,
-} from "../state/movieState";
+import { movieState, localeState } from "../state/movieState";
 import { useQuery } from "react-query";
-import { getMovie, makeBgPath } from "../api/api";
+import { makeBgPath, getTMDBMovie } from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { MdOutlineWebAsset as WebSite } from "react-icons/md";
-import axios from "axios";
 
 const Container = styled(motion.div)`
 	width: 80%;
@@ -25,6 +20,7 @@ const Container = styled(motion.div)`
 	overflow: hidden;
 	border-radius: 15px;
 	padding: 15px;
+	font-size: 21px;
 
 	div {
 		margin: 10px;
@@ -46,32 +42,17 @@ const BackImg = styled.img`
 
 const MovieDetailPage: React.FC = () => {
 	const [movieId] = useRecoilState(movieState);
-	const [isTranslate] = useRecoilState(translateState);
-	const [translatedText, setTranslatedText] =
-		useRecoilState(translateTextState);
-
-	const translateText = async (text: any) => {
-		const AUTH_KEY = process.env.REACT_APP_DEEPL_AUTH_KEY;
-
-		const url = `https://api-free.deepl.com/v2/translate?auth_key=${AUTH_KEY}&text=${text}&source_lang=EN&target_lang=KO`;
-
-		axios.get(url).then((response) => {
-			setTranslatedText(response.data.translations[0].text);
-		});
-	};
+	const [locale] = useRecoilState(localeState);
 
 	const { isLoading, data } = useQuery(
-		["id", movieId],
-		({ queryKey }) => getMovie(queryKey[1]),
+		["id", movieId, locale],
+		({ queryKey }) => getTMDBMovie(queryKey[1], queryKey[2]),
 		{
 			refetchOnWindowFocus: false,
 			retry: false,
 			onSuccess: (data) => {
 				console.log(data);
 				console.log("Movie Detail Page Load");
-				if (isTranslate) {
-					translateText(data.overview);
-				}
 			},
 		}
 	);
@@ -90,7 +71,10 @@ const MovieDetailPage: React.FC = () => {
 				}}
 			>
 				<BackImg src={makeBgPath(data.backdrop_path)} />
-				<div>{`${data.title} ( ${data.original_title} ) [${data.original_language}]`}</div>
+				<div
+					style={{ fontSize: "40px" }}
+				>{`${data.title} ( ${data.original_title} ) [${data.original_language}]`}</div>
+				<div>{`" ${data.tagline} "`}</div>
 				<div style={{ display: "flex", alignItems: "center" }}>
 					<img
 						src="/imdb.png"
@@ -113,15 +97,22 @@ const MovieDetailPage: React.FC = () => {
 					))}
 				</div>
 				<div>{data.release_date}</div>
-				{isTranslate ? <div>{translatedText}</div> : <div>{data.overview}</div>}
-				<div>
+				<div>{data.overview}</div>
+				<div
+					style={{
+						border: "2px solid white",
+						width: "300px",
+						borderRadius: "15px",
+						padding: "15px",
+					}}
+				>
 					{data.genres.map((genre: any) => (
 						<div>{genre.name}</div>
 					))}
 				</div>
-				<div>{`${data.vote_average} (${data.vote_count})`}</div>
+				<div>{`Rating : ${data.vote_average} (${data.vote_count})`}</div>
 
-				<div>{data.runtime + "min"}</div>
+				<div>{"Runtime : " + data.runtime + " min"}</div>
 			</Container>
 		</>
 	);

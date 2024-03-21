@@ -3,14 +3,22 @@ import {
 	getComingSoon,
 	getNowPlaying,
 	getPopular,
+	getTMDBNowPlaying,
+	getTMDBPopular,
 	makeImagePath,
+	getTMDBComingSoon,
 } from "../api/api";
 import { useRecoilState } from "recoil";
 import { tabState } from "../state/tabState";
 import { styled } from "styled-components";
 import { motion } from "framer-motion";
 import { FaStar as Star } from "react-icons/fa6";
-import { modalState, movieState, scrollState } from "../state/movieState";
+import {
+	localeState,
+	modalState,
+	movieState,
+	scrollState,
+} from "../state/movieState";
 import MovieDetailPage from "./MovieDetailPage";
 import { useEffect } from "react";
 
@@ -87,6 +95,7 @@ const MoviePage: React.FC = () => {
 	const [, setMovie] = useRecoilState(movieState);
 	const [modal, setModal] = useRecoilState(modalState);
 	const [scroll, setScroll] = useRecoilState(scrollState);
+	const [locale] = useRecoilState(localeState);
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY;
@@ -105,17 +114,17 @@ const MoviePage: React.FC = () => {
 		window.scrollTo(0, prevScrollY);
 	};
 
-	const { isLoading, data } = useQuery(
+	const { isLoading, data, refetch } = useQuery(
 		tab === "POPULAR"
-			? "popular"
+			? ["popular", locale]
 			: tab === "COMING SOON"
-			? "coming-soon"
-			: "now-playing",
+			? ["coming-soon", locale]
+			: ["now-playing", locale],
 		tab === "POPULAR"
-			? getPopular
+			? ({ queryKey }) => getTMDBPopular(queryKey[1])
 			: tab === "COMING SOON"
-			? getComingSoon
-			: getNowPlaying,
+			? ({ queryKey }) => getTMDBComingSoon(queryKey[1])
+			: ({ queryKey }) => getTMDBNowPlaying(queryKey[1]),
 		{
 			refetchOnWindowFocus: false,
 			retry: 0,
@@ -126,19 +135,16 @@ const MoviePage: React.FC = () => {
 	);
 
 	useEffect(() => {
+		refetch();
+	}, [locale]);
+
+	useEffect(() => {
 		if (modal) {
 			preventScroll();
 		} else {
 			allowScroll(scroll);
 		}
 	}, [modal, setModal]);
-
-	// useEffect(() => {
-	// 	const prevScrollY = preventScroll();
-	// 	return () => {
-	// 		allowScroll(prevScrollY);
-	// 	};
-	// }, []);
 
 	function OpenModal(id: any) {
 		setMovie(id);
