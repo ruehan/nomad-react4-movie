@@ -10,11 +10,11 @@
 
 - [x] Now Playing Page
 
-- [ ] When a movie is clicked, create a modal that displays the movie's detail.
+- [x] When a movie is clicked, create a modal that displays the movie's detail.
 
 - [x] Use React Query to fetch the data.
 
-- [ ] Use Framer Motion to recreate the animations seen in the video (navigation, movies list, modal)
+- [x] Use Framer Motion to recreate the animations seen in the video (navigation, movies list, modal)
 
 ## Implementation List
 
@@ -27,6 +27,10 @@
 - [x] Release Date
 
 - [x] Poster
+
+- [ ] DarkMode
+
+- [x] Translate
 
 ### Detail Page
 
@@ -44,11 +48,7 @@
 
 - [x] Vote Average & Vote Count
 
-- [ ] Overview Translate
-
-### MY Page
-
-- [ ] User History (Clicked Movies List)
+- [x] Overview Translate
 
 ### Search Page
 
