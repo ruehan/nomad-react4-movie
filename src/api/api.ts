@@ -1,19 +1,79 @@
+import axios from "axios";
+
 const BASE_URL = "https://movies-api.nomadcoders.workers.dev";
+
+const TMDB_URL = "https://api.themoviedb.org/3/movie";
+
+const AUTH_KEY = import.meta.env.VITE_APP_TMDB_KEY;
+
+// const locale = localStorage.getItem("locale");
 
 export function getPopular() {
 	return fetch(`${BASE_URL}/popular`).then((r) => r.json());
+}
+
+export function getTMDBPopular(locale: any) {
+	const url = `${TMDB_URL}/popular?language=${locale}&page=1`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
 }
 
 export function getNowPlaying() {
 	return fetch(`${BASE_URL}/now-playing`).then((r) => r.json());
 }
 
+export function getTMDBNowPlaying(locale: any) {
+	const url = `${TMDB_URL}/now_playing?language=${locale}&page=1`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
+}
+
 export function getComingSoon() {
 	return fetch(`${BASE_URL}/coming-soon`).then((r) => r.json());
 }
 
+export function getTMDBComingSoon(locale: any) {
+	const url = `${TMDB_URL}/upcoming?language=${locale}&page=1`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
+}
+
 export function getMovie(id: string) {
 	return fetch(`${BASE_URL}/movie?id=${id}`).then((r) => r.json());
+}
+
+export function getTMDBMovie(id: string, locale: any) {
+	const url = `${TMDB_URL}/${id}?language=${locale}`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
 }
 
 export function makeImagePath(image: string) {
