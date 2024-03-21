@@ -15,12 +15,7 @@ export const scrollState = atom({
 	default: 0,
 });
 
-export const translateState = atom({
-	key: "translateState",
-	default: false,
-});
-
-export const translateTextState = atom({
-	key: "translateTextState",
-	default: "",
+export const localeState = atom({
+	key: "localeState",
+	default: "ko-KR",
 });
