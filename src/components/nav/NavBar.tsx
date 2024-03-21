@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
@@ -8,6 +8,9 @@ import {
 	// MdLightMode as LightMode,
 	MdDarkMode as DarkMode,
 } from "react-icons/md";
+
+import { FaEarthAsia as AsiaIcon } from "react-icons/fa6";
+import { localeState } from "../../state/movieState";
 
 const Tabs = styled.ul`
 	width: 100%;
@@ -44,6 +47,7 @@ const Circle = styled(motion.span)`
 
 const NavBar: React.FC = () => {
 	const [, setTab] = useRecoilState(tabState);
+	const [locale, setLocale] = useRecoilState(localeState);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -61,6 +65,16 @@ const NavBar: React.FC = () => {
 	const onClick = (event: any) => {
 		setTab(event.target.innerText);
 		localStorage.setItem("tab", event.target.innerText);
+	};
+
+	const TransToEn = () => {
+		setLocale("en-US");
+		localStorage.setItem("locale", "en-US");
+	};
+
+	const TransToKo = () => {
+		setLocale("ko-KR");
+		localStorage.setItem("locale", "ko-KR");
 	};
 
 	return (
@@ -86,7 +100,20 @@ const NavBar: React.FC = () => {
 				</Tab>
 				<Tab>
 					{/* <Translate /> */}
-					<DarkMode />
+					<div>
+						{locale == "ko-KR" ? (
+							<AsiaIcon
+								style={{ margin: "10px", fontSize: "25px" }}
+								onClick={TransToEn}
+							/>
+						) : (
+							<AsiaIcon
+								style={{ margin: "10px", fontSize: "25px" }}
+								onClick={TransToKo}
+							/>
+						)}
+						<DarkMode style={{ margin: "10px", fontSize: "25px" }} />
+					</div>
 					{/* <Link to="/my" onClick={onClick}>
 						MY
 						{myMatch && <Circle layoutId="circle" />}
