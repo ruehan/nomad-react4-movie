@@ -54,6 +54,10 @@
 
 - [ ] Search Results
 
+### Error Page
+
+- [ ] 404 Not Found
+
 ## API Exemple
 
 ### Movie
