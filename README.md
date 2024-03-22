@@ -20,8 +20,6 @@
 
 ### Common (Popular / Coming Soon / Now Playing)
 
-- [ ] Search Bar (Title / Genre)
-
 - [x] Vote Average & Vote Count
 
 - [x] Release Date
@@ -40,8 +38,6 @@
 
 - [x] Runtime
 
-- [ ] Status
-
 - [x] Overview
 
 - [x] Title
@@ -50,9 +46,7 @@
 
 - [x] Overview Translate
 
-### Search Page
-
-- [ ] Search Results
+- [x] Movie Preview
 
 ### Error Page
 
