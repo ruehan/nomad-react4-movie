@@ -19,3 +19,8 @@ export const localeState = atom({
 	key: "localeState",
 	default: "ko-KR",
 });
+
+export const darkModeState = atom({
+	key: "darkModeState",
+	default: true,
+});

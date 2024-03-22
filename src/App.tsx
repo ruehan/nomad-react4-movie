@@ -1,5 +1,9 @@
 import { createGlobalStyle } from "styled-components";
 import PopularPage from "./pages/MoviePage";
+import { ThemeProvider } from "styled-components";
+import { useRecoilState } from "recoil";
+import { darkTheme, lightTheme } from "./theme/themes";
+import { darkModeState } from "./state/movieState";
 
 const GlobalStyle = createGlobalStyle`
     
@@ -42,7 +46,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     line-height: 1;
-    background-color: #040404;
+    background-color: ${(props) => props.theme.backgroundColor};
 	  color: white;
     /* justify-content: center; */
       /* display: flex;
@@ -67,15 +71,22 @@ const GlobalStyle = createGlobalStyle`
 
   a {
     text-decoration: none;
-    color: white;
+   color: ${(props) => props.theme.fontColor};
+  }
+
+  svg {
+    color: ${(props) => props.theme.fontColor};
   }
 `;
 
 function App() {
+	const [isdarkMode] = useRecoilState(darkModeState);
 	return (
 		<>
-			<GlobalStyle />
-			<PopularPage />
+			<ThemeProvider theme={isdarkMode ? darkTheme : lightTheme}>
+				<GlobalStyle />
+				<PopularPage />
+			</ThemeProvider>
 		</>
 	);
 }

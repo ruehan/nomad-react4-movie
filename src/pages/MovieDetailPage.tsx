@@ -10,7 +10,7 @@ const Container = styled(motion.div)`
 	width: 80%;
 	height: 80%;
 	z-index: 20;
-	background-color: black;
+	background-color: ${(props) => props.theme.backgroundColor};
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -20,24 +20,31 @@ const Container = styled(motion.div)`
 	overflow: hidden;
 	border-radius: 15px;
 	padding: 15px;
-	font-size: 21px;
+	font-size: 17px;
+	color: ${(props) => props.theme.fontColor};
 
 	div {
 		margin: 10px;
 	}
 `;
 
+const Genres = styled.div`
+	border: 2px solid ${(props) => props.theme.hoverBackgroundColor};
+	width: 300px;
+	border-radius: 15px;
+	padding: 15px;
+	background-color: ${(props) => props.theme.backgroundColor};
+	opacity: 0.5;
+`;
+
 const BackImg = styled.img`
-	/* width: auto;
-	height: 100%; */
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	/* object-fit: cover; */
 	z-index: -1;
-	opacity: 0.4;
+	opacity: 0.5;
 `;
 
 const MovieDetailPage: React.FC = () => {
@@ -72,7 +79,7 @@ const MovieDetailPage: React.FC = () => {
 			>
 				<BackImg src={makeBgPath(data.backdrop_path)} />
 				<div
-					style={{ fontSize: "40px" }}
+					style={{ fontSize: "30px" }}
 				>{`${data.title} ( ${data.original_title} ) [${data.original_language}]`}</div>
 				<div>{`" ${data.tagline} "`}</div>
 				<div style={{ display: "flex", alignItems: "center" }}>
@@ -98,18 +105,11 @@ const MovieDetailPage: React.FC = () => {
 				</div>
 				<div>{data.release_date}</div>
 				<div>{data.overview}</div>
-				<div
-					style={{
-						border: "2px solid white",
-						width: "300px",
-						borderRadius: "15px",
-						padding: "15px",
-					}}
-				>
+				<Genres>
 					{data.genres.map((genre: any) => (
 						<div>{genre.name}</div>
 					))}
-				</div>
+				</Genres>
 				<div>{`Rating : ${data.vote_average} (${data.vote_count})`}</div>
 
 				<div>{"Runtime : " + data.runtime + " min"}</div>

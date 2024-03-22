@@ -3,19 +3,19 @@ import { Link, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
-	// MdLightMode as LightMode,
+	MdLightMode as LightMode,
 	MdDarkMode as DarkMode,
 } from "react-icons/md";
 
 import { FaEarthAsia as AsiaIcon } from "react-icons/fa6";
-import { localeState } from "../../state/movieState";
+import { darkModeState, localeState } from "../../state/movieState";
 
 const Tabs = styled.ul`
 	width: 100%;
 	height: 50px;
-	background-color: #040404;
+	background-color: ${(props) => props.theme.backgroundColor};
 	display: flex;
 	justify-content: space-around;
 	position: sticky;
@@ -30,7 +30,6 @@ const Tab = styled.li`
 	position: relative;
 	justify-content: center;
 	align-items: center;
-	/* flex-direction: column; */
 	font-size: 22px;
 `;
 
@@ -49,6 +48,9 @@ const Circle = styled(motion.span)`
 const NavBar: React.FC = () => {
 	const [, setTab] = useRecoilState(tabState);
 	const [locale, setLocale] = useRecoilState(localeState);
+	const [clickCount, setClickCount] = useState(0);
+	const [lastClickTime, setLastClickTime] = useState(new Date().getTime());
+	const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -78,10 +80,32 @@ const NavBar: React.FC = () => {
 		localStorage.setItem("locale", "ko-KR");
 	};
 
+	const ToggleMode = () => {
+		setIsDarkMode((prev) => !prev);
+	};
+
+	const easterEgg = () => {
+		const currentTime = new Date().getTime();
+
+		if (currentTime - lastClickTime > 500) {
+			setClickCount(1);
+		} else {
+			setClickCount((prev) => prev + 1);
+		}
+		setLastClickTime(currentTime);
+	};
+
+	useEffect(() => {
+		if (clickCount >= 3) {
+			console.log("이스터에그 발동..!");
+			setClickCount(0);
+		}
+	}, [clickCount, lastClickTime]);
+
 	return (
 		<>
 			<Tabs>
-				<Tab>
+				<Tab onClick={easterEgg}>
 					<img
 						style={{ width: "170px" }}
 						src={
@@ -108,7 +132,6 @@ const NavBar: React.FC = () => {
 					</Link>
 				</Tab>
 				<Tab>
-					{/* <Translate /> */}
 					<div>
 						{locale == "ko-KR" ? (
 							<AsiaIcon
@@ -121,12 +144,18 @@ const NavBar: React.FC = () => {
 								onClick={TransToKo}
 							/>
 						)}
-						<DarkMode style={{ margin: "10px", fontSize: "25px" }} />
+						{isDarkMode ? (
+							<DarkMode
+								style={{ margin: "10px", fontSize: "25px" }}
+								onClick={ToggleMode}
+							/>
+						) : (
+							<LightMode
+								style={{ margin: "10px", fontSize: "25px" }}
+								onClick={ToggleMode}
+							/>
+						)}
 					</div>
-					{/* <Link to="/my" onClick={onClick}>
-						MY
-						{myMatch && <Circle layoutId="circle" />}
-					</Link> */}
 				</Tab>
 			</Tabs>
 		</>

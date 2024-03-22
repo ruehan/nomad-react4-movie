@@ -25,6 +25,7 @@ const MovieContainer = styled(motion.div)`
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
+	color: ${(props) => props.theme.fontColor};
 `;
 
 const Movie = styled(motion.div)`
@@ -44,7 +45,7 @@ const Info = styled.div`
 	min-width: 100%;
 	height: 100%;
 	opacity: 0;
-	background-color: black;
+	background-color: ${(props) => props.theme.backgroundColor};
 	position: absolute;
 	border-radius: 15px;
 	display: flex;
@@ -52,6 +53,13 @@ const Info = styled.div`
 	flex-direction: column;
 	z-index: 3;
 	pointer-events: none;
+	color: ${(props) => props.theme.fontColor};
+`;
+
+const InfoTitle = styled.p`
+	color: ${(props) => props.theme.titleColor};
+	font-size: 20px;
+	margin-top: 20px;
 `;
 
 const Img = styled(motion.img)`
@@ -192,11 +200,7 @@ const MoviePage: React.FC = () => {
 						></ImgHover>
 						<Text>{movie.title}</Text>
 						<Info>
-							<p
-								style={{ color: "yellow", fontSize: "20px", marginTop: "20px" }}
-							>
-								{movie.title}
-							</p>
+							<InfoTitle>{movie.title}</InfoTitle>
 							<p style={{ marginTop: "20px" }}>{movie.release_date}</p>
 							<p
 								style={{
@@ -212,7 +216,7 @@ const MoviePage: React.FC = () => {
 									display: "flex",
 									justifyContent: "space-around",
 									position: "absolute",
-									bottom: "10px",
+									bottom: "20px",
 									width: "100%",
 								}}
 							>
@@ -223,7 +227,7 @@ const MoviePage: React.FC = () => {
 										alignItems: "center",
 									}}
 								>
-									<Star style={{ marginRight: "5px", color: "yellow" }} />
+									<Star style={{ marginRight: "5px", color: "orange" }} />
 									<p>{movie.vote_average}</p>
 								</div>
 								<p>{`(${movie.vote_count})`}</p>
