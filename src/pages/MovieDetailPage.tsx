@@ -59,7 +59,7 @@ const MovieDetailPage: React.FC = () => {
 			refetchOnWindowFocus: false,
 			retry: false,
 			onSuccess: (data) => {
-				// console.log(data);
+				console.log(data);
 				console.log("Movie Detail Page Load");
 			},
 		}
