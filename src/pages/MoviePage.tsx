@@ -198,7 +198,13 @@ const MoviePage: React.FC = () => {
 								{movie.title}
 							</p>
 							<p style={{ marginTop: "20px" }}>{movie.release_date}</p>
-							<p style={{ marginTop: "20px", fontSize: "14px" }}>
+							<p
+								style={{
+									marginTop: "20px",
+									fontSize: "14px",
+									lineHeight: "150%",
+								}}
+							>
 								{movie.overview.slice(0, 100) + "..."}
 							</p>
 							<div
