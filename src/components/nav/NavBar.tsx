@@ -20,7 +20,8 @@ const Tabs = styled.ul`
 	justify-content: space-around;
 	position: sticky;
 	top: 0px;
-	padding: 10px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 	z-index: 5;
 `;
 
@@ -80,6 +81,14 @@ const NavBar: React.FC = () => {
 	return (
 		<>
 			<Tabs>
+				<Tab>
+					<img
+						style={{ width: "170px" }}
+						src={
+							"https://www.logomaker.com/api/main/images/1j+ojVNGOMkX9W2+J1iwiGOujPOCqhFNkAiIiWcqL2VE9AhtkSEtg...Bq...Q=="
+						}
+					></img>
+				</Tab>
 				<Tab>
 					<Link to="/" onClick={onClick}>
 						POPULAR
