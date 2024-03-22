@@ -1,10 +1,11 @@
 import { useRecoilState } from "recoil";
 import { movieState, localeState } from "../state/movieState";
 import { useQuery } from "react-query";
-import { makeBgPath, getTMDBMovie } from "../api/api";
+import { makeBgPath, getTMDBMovie, getTMDBVideos } from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { MdOutlineWebAsset as WebSite } from "react-icons/md";
+import YouTube from "react-youtube";
 
 const Container = styled(motion.div)`
 	width: 80%;
@@ -58,13 +59,26 @@ const MovieDetailPage: React.FC = () => {
 			refetchOnWindowFocus: false,
 			retry: false,
 			onSuccess: (data) => {
-				console.log(data);
+				// console.log(data);
 				console.log("Movie Detail Page Load");
 			},
 		}
 	);
 
-	if (isLoading) return null;
+	const { isLoading: videoIsLoading, data: videoData } = useQuery(
+		["video_id", movieId, locale],
+		({ queryKey }) => getTMDBVideos(queryKey[1], queryKey[2]),
+		{
+			refetchOnWindowFocus: false,
+			retry: false,
+			onSuccess: (data) => {
+				console.log(data);
+				console.log("Movie Video Data Load");
+			},
+		}
+	);
+
+	if (isLoading || videoIsLoading) return null;
 	// genres / homepage / imdb_id / production_countries / revenue / runtime / spoken_langages / status
 
 	return (
@@ -113,6 +127,24 @@ const MovieDetailPage: React.FC = () => {
 				<div>{`Rating : ${data.vote_average} (${data.vote_count})`}</div>
 
 				<div>{"Runtime : " + data.runtime + " min"}</div>
+				{videoData.results.length > 0 && (
+					<YouTube
+						style={{ position: "absolute", bottom: "10px", right: "10px" }}
+						videoId={videoData.results[0].key}
+						opts={{
+							width: "560",
+							height: "315",
+							playerVars: {
+								autoplay: 0,
+								rel: 0,
+								modestbranding: 1,
+							},
+						}}
+						onEnd={(e) => {
+							e.target.stopVideo(0);
+						}}
+					></YouTube>
+				)}
 			</Container>
 		</>
 	);
