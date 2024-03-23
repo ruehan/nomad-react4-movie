@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const TMDB_URL = "https://api.themoviedb.org/3/movie";
+const TMDB_URL = "https://api.themoviedb.org/3";
 
 const AUTH_KEY = import.meta.env.VITE_APP_TMDB_KEY;
 
-export function getTMDBPopular(locale: any) {
-	const url = `${TMDB_URL}/popular?language=${locale}&page=1`;
+export function getTMDBPopular(locale: any, page: any) {
+	const url = `${TMDB_URL}/movie/popular?language=${locale}&page=${page}`;
 	const options = {
 		method: "GET",
 		headers: {
@@ -17,8 +17,8 @@ export function getTMDBPopular(locale: any) {
 	return axios.get(url, options).then((response) => response.data);
 }
 
-export function getTMDBNowPlaying(locale: any) {
-	const url = `${TMDB_URL}/now_playing?language=${locale}&page=1`;
+export function getTMDBNowPlaying(locale: any, page: any) {
+	const url = `${TMDB_URL}/movie/now_playing?language=${locale}&page=${page}`;
 	const options = {
 		method: "GET",
 		headers: {
@@ -30,8 +30,8 @@ export function getTMDBNowPlaying(locale: any) {
 	return axios.get(url, options).then((response) => response.data);
 }
 
-export function getTMDBComingSoon(locale: any) {
-	const url = `${TMDB_URL}/upcoming?language=${locale}&page=1`;
+export function getTMDBComingSoon(locale: any, page: any) {
+	const url = `${TMDB_URL}/movie/upcoming?language=${locale}&page=${page}`;
 	const options = {
 		method: "GET",
 		headers: {
@@ -44,7 +44,7 @@ export function getTMDBComingSoon(locale: any) {
 }
 
 export function getTMDBMovie(id: string, locale: any) {
-	const url = `${TMDB_URL}/${id}?language=${locale}`;
+	const url = `${TMDB_URL}/movie/${id}?language=${locale}`;
 	const options = {
 		method: "GET",
 		headers: {
@@ -57,7 +57,7 @@ export function getTMDBMovie(id: string, locale: any) {
 }
 
 export function getTMDBVideos(id: string, locale: any) {
-	const url = `${TMDB_URL}/${id}/videos?language=${locale}`;
+	const url = `${TMDB_URL}/movie/${id}/videos?language=${locale}`;
 	const options = {
 		method: "GET",
 		headers: {
@@ -70,7 +70,20 @@ export function getTMDBVideos(id: string, locale: any) {
 }
 
 export function getTMDBCredits(id: string, locale: any) {
-	const url = `${TMDB_URL}/${id}/credits?language=${locale}`;
+	const url = `${TMDB_URL}/movie/${id}/credits?language=${locale}`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
+}
+
+export function getTMDBCollections(id: string, locale: any) {
+	const url = `${TMDB_URL}/collection/${id}?language=${locale}`;
 	const options = {
 		method: "GET",
 		headers: {
