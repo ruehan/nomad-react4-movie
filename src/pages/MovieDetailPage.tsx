@@ -7,6 +7,7 @@ import {
 	getTMDBVideos,
 	getTMDBCredits,
 	makeImagePath,
+	getTMDBCollections,
 } from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -86,8 +87,7 @@ const MovieDetailPage: React.FC = () => {
 		{
 			refetchOnWindowFocus: false,
 			retry: false,
-			onSuccess: (data) => {
-				console.log(data);
+			onSuccess: () => {
 				console.log("Movie Detail Page Load");
 			},
 		}
@@ -99,8 +99,7 @@ const MovieDetailPage: React.FC = () => {
 		{
 			refetchOnWindowFocus: false,
 			retry: false,
-			onSuccess: (data) => {
-				console.log(data);
+			onSuccess: () => {
 				console.log("Movie Video Data Load");
 			},
 		}
@@ -112,14 +111,29 @@ const MovieDetailPage: React.FC = () => {
 		{
 			refetchOnWindowFocus: false,
 			retry: false,
-			onSuccess: (data) => {
-				console.log(data);
+			onSuccess: () => {
 				console.log("Movie Credit Data Load");
 			},
 		}
 	);
 
-	if (isLoading || videoIsLoading || creditIsLoading) return null;
+	const { isLoading: collectionIsLoading, data: collectionData } = useQuery(
+		["collection_id", data?.belongs_to_collection?.id, locale],
+		({ queryKey }) => getTMDBCollections(queryKey[1], queryKey[2]),
+		{
+			enabled: !!data?.belongs_to_collection?.id,
+			refetchOnWindowFocus: false,
+			retry: false,
+			onSuccess: () => {
+				console.log("Movie Collection Data Load");
+			},
+		}
+	);
+
+	console.log(collectionData);
+
+	if (isLoading || videoIsLoading || creditIsLoading || collectionIsLoading)
+		return null;
 
 	return (
 		<>
@@ -149,9 +163,10 @@ const MovieDetailPage: React.FC = () => {
 						onClick={() => window.open(data.homepage)}
 					/>
 				</div>
-				<div>
+				<div key={data.id}>
 					{data.production_countries.map((country: any) => (
 						<img
+							key={country.id}
 							style={{ width: "40px", height: "40px" }}
 							src={`https://flagsapi.com/${country.iso_3166_1}/shiny/64.png`}
 						/>
