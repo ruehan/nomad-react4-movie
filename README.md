@@ -26,7 +26,7 @@
 
 - [x] Poster
 
-- [ ] DarkMode
+- [x] DarkMode
 
 - [x] Translate
 
@@ -47,6 +47,8 @@
 - [x] Overview Translate
 
 - [x] Movie Preview
+
+- [ ] Collections Detail
 
 ### Error Page
 
