@@ -154,8 +154,6 @@ const MoviePage: React.FC = () => {
 	function OpenModal(id: any) {
 		setMovie(id);
 		setModal(true);
-		console.log(id);
-		console.log(modal);
 	}
 
 	function CloseModal() {

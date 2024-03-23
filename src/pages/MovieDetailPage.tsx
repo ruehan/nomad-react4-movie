@@ -1,7 +1,13 @@
 import { useRecoilState } from "recoil";
 import { movieState, localeState } from "../state/movieState";
 import { useQuery } from "react-query";
-import { makeBgPath, getTMDBMovie, getTMDBVideos } from "../api/api";
+import {
+	makeBgPath,
+	getTMDBMovie,
+	getTMDBVideos,
+	getTMDBCredits,
+	makeImagePath,
+} from "../api/api";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { MdOutlineWebAsset as WebSite } from "react-icons/md";
@@ -20,9 +26,10 @@ const Container = styled(motion.div)`
 	flex-direction: column;
 	overflow: hidden;
 	border-radius: 15px;
-	padding: 15px;
+	padding: 20px;
 	font-size: 17px;
-	color: ${(props) => props.theme.fontColor};
+	color: ${(props) => props.theme.hoverBackgroundColor};
+	border: 1px solid ${(props) => props.theme.hoverBackgroundColor};
 
 	div {
 		margin: 10px;
@@ -31,21 +38,42 @@ const Container = styled(motion.div)`
 
 const Genres = styled.div`
 	border: 2px solid ${(props) => props.theme.hoverBackgroundColor};
-	width: 300px;
+	max-width: 100%;
+	width: fit-content;
 	border-radius: 15px;
 	padding: 15px;
 	background-color: ${(props) => props.theme.backgroundColor};
 	opacity: 0.5;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 `;
 
 const BackImg = styled.img`
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	width: 100%;
-	height: 100%;
+	height: auto;
 	z-index: -1;
 	opacity: 0.5;
+`;
+
+const Credits = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 40%;
+	height: 300px;
+	flex-wrap: wrap;
+	overflow: scroll;
+	justify-content: center;
+	text-align: center;
+	/* background-color: ${(props) => props.theme.backgroundColor}; */
+	border: 2px solid ${(props) => props.theme.hoverBackgroundColor};
+	border-radius: 15px;
+	/* opacity: 0.9; */
 `;
 
 const MovieDetailPage: React.FC = () => {
@@ -78,8 +106,20 @@ const MovieDetailPage: React.FC = () => {
 		}
 	);
 
-	if (isLoading || videoIsLoading) return null;
-	// genres / homepage / imdb_id / production_countries / revenue / runtime / spoken_langages / status
+	const { isLoading: creditIsLoading, data: creditData } = useQuery(
+		["credit_id", movieId, locale],
+		({ queryKey }) => getTMDBCredits(queryKey[1], queryKey[2]),
+		{
+			refetchOnWindowFocus: false,
+			retry: false,
+			onSuccess: (data) => {
+				console.log(data);
+				console.log("Movie Credit Data Load");
+			},
+		}
+	);
+
+	if (isLoading || videoIsLoading || creditIsLoading) return null;
 
 	return (
 		<>
@@ -121,19 +161,40 @@ const MovieDetailPage: React.FC = () => {
 				<div>{data.overview}</div>
 				<Genres>
 					{data.genres.map((genre: any) => (
-						<div>{genre.name}</div>
+						<div style={{ width: "100px" }}>{genre.name}</div>
 					))}
 				</Genres>
 				<div>{`Rating : ${data.vote_average} (${data.vote_count})`}</div>
 
 				<div>{"Runtime : " + data.runtime + " min"}</div>
+				<Credits>
+					{creditData.cast.map(
+						(credit: any, index: any) =>
+							index < 5 && (
+								<div style={{ width: "100px", height: "200px" }}>
+									<img
+										style={{ width: "100px" }}
+										src={makeImagePath(credit.profile_path)}
+									></img>
+									<p style={{ marginTop: "10px" }}>{credit.name}</p>
+									<p style={{ marginTop: "10px" }}>{credit.character}</p>
+								</div>
+							)
+					)}
+				</Credits>
 				{videoData.results.length > 0 && (
 					<YouTube
-						style={{ position: "absolute", bottom: "10px", right: "10px" }}
+						style={{
+							position: "absolute",
+							bottom: "10px",
+							right: "10px",
+							width: "40%",
+							height: "40%",
+						}}
 						videoId={videoData.results[0].key}
 						opts={{
-							width: "560",
-							height: "315",
+							width: "100%",
+							height: "100%",
 							playerVars: {
 								autoplay: 0,
 								rel: 0,
