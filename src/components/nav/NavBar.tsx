@@ -11,11 +11,15 @@ import {
 
 import { FaEarthAsia as AsiaIcon } from "react-icons/fa6";
 import { darkModeState, localeState } from "../../state/movieState";
+import FollowMouse from "../event/FollowMouse";
 
-const Tabs = styled.ul`
+interface TabProps {
+	backgroundColor: string;
+}
+
+const Tabs = styled.ul<TabProps>`
 	width: 100%;
 	height: 50px;
-	background-color: ${(props) => props.theme.backgroundColor};
 	display: flex;
 	justify-content: space-around;
 	position: sticky;
@@ -23,6 +27,7 @@ const Tabs = styled.ul`
 	padding-top: 30px;
 	padding-bottom: 30px;
 	z-index: 5;
+	background-color: ${(props) => props.backgroundColor};
 `;
 
 const Tab = styled.li`
@@ -51,6 +56,7 @@ const NavBar: React.FC = () => {
 	const [clickCount, setClickCount] = useState(0);
 	const [lastClickTime, setLastClickTime] = useState(new Date().getTime());
 	const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
+	const [isFollow, setIsFollow] = useState(false);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -96,15 +102,31 @@ const NavBar: React.FC = () => {
 	};
 
 	useEffect(() => {
+		const handleEscKey = (event: any) => {
+			if (event.key === "Escape" || event.keyCode === 27) {
+				setIsFollow(false);
+			}
+		};
+
+		window.addEventListener("keydown", handleEscKey);
+
+		return () => {
+			window.removeEventListener("keydown", handleEscKey);
+		};
+	}, []);
+
+	useEffect(() => {
 		if (clickCount >= 3) {
 			console.log("이스터에그 발동..!");
+			setIsFollow(true);
 			setClickCount(0);
 		}
 	}, [clickCount, lastClickTime]);
 
 	return (
 		<>
-			<Tabs>
+			{isFollow && <FollowMouse />}
+			<Tabs backgroundColor={isDarkMode ? "black" : "white"}>
 				<Tab onClick={easterEgg}>
 					<img
 						style={{ width: "170px" }}
