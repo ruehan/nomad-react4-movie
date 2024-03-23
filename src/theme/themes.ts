@@ -3,6 +3,7 @@ export interface Theme {
 	fontColor: string;
 	hoverBackgroundColor: string;
 	titleColor: string;
+	navbarColor: string;
 }
 
 export const lightTheme: Theme = {
@@ -10,6 +11,7 @@ export const lightTheme: Theme = {
 	fontColor: "black",
 	hoverBackgroundColor: "#040404",
 	titleColor: "purple",
+	navbarColor: "#f7d481",
 };
 
 export const darkTheme: Theme = {
@@ -17,4 +19,5 @@ export const darkTheme: Theme = {
 	fontColor: "white",
 	hoverBackgroundColor: "white",
 	titleColor: "yellow",
+	navbarColor: "black",
 };
