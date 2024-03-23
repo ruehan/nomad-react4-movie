@@ -69,6 +69,19 @@ export function getTMDBVideos(id: string, locale: any) {
 	return axios.get(url, options).then((response) => response.data);
 }
 
+export function getTMDBCredits(id: string, locale: any) {
+	const url = `${TMDB_URL}/${id}/credits?language=${locale}`;
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: `Bearer ${AUTH_KEY}`,
+		},
+	};
+
+	return axios.get(url, options).then((response) => response.data);
+}
+
 export function makeImagePath(image: string) {
 	return `https://image.tmdb.org/t/p/w500${image}`;
 }
