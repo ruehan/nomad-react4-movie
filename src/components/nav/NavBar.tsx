@@ -3,6 +3,7 @@ import { Link, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { styled } from "styled-components";
 import { tabState } from "../../state/tabState";
+import { pageState } from "../../state/movieState";
 import { useEffect, useState } from "react";
 import {
 	MdLightMode as LightMode,
@@ -57,6 +58,7 @@ const NavBar: React.FC = () => {
 	const [lastClickTime, setLastClickTime] = useState(new Date().getTime());
 	const [isDarkMode, setIsDarkMode] = useRecoilState(darkModeState);
 	const [isFollow, setIsFollow] = useState(false);
+	const [, setPage] = useRecoilState(pageState);
 
 	const popularMatch = useMatch("/");
 	const comingSoonMatch = useMatch("coming-soon");
@@ -73,6 +75,7 @@ const NavBar: React.FC = () => {
 
 	const onClick = (event: any) => {
 		setTab(event.target.innerText);
+		setPage(1);
 		localStorage.setItem("tab", event.target.innerText);
 	};
 

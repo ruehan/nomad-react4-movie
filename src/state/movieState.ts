@@ -24,3 +24,8 @@ export const darkModeState = atom({
 	key: "darkModeState",
 	default: true,
 });
+
+export const pageState = atom({
+	key: "pageState",
+	default: 1,
+});
