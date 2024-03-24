@@ -71,10 +71,7 @@ const Credits = styled.div`
 	overflow: scroll;
 	justify-content: center;
 	text-align: center;
-	/* background-color: ${(props) => props.theme.backgroundColor}; */
 	border: 2px solid ${(props) => props.theme.hoverBackgroundColor};
-	border-radius: 15px;
-	/* opacity: 0.9; */
 `;
 
 const MovieDetailPage: React.FC = () => {

@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import MoviePage from "../pages/MoviePage";
 import NavBar from "../components/nav/NavBar";
 import MovieDetailPage from "../pages/MovieDetailPage";
+import NotFound from "../error/NotFound";
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
 				element: <MovieDetailPage />,
 			},
 		],
+		errorElement: <NotFound />,
 	},
 ]);
 

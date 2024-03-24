@@ -18,7 +18,7 @@ import {
 	scrollState,
 } from "../state/movieState";
 import MovieDetailPage from "./MovieDetailPage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const MovieContainer = styled(motion.div)`
 	display: flex;
@@ -84,25 +84,32 @@ const Text = styled.p`
 	margin-top: 20px;
 `;
 
-const container = {
-	hidden: { opacity: 1, scale: 0 },
-	visible: {
-		opacity: 1,
-		scale: 1,
-		transition: {
-			delayChildren: 0.3,
-			staggerChildren: 0.2,
-		},
-	},
-};
-
 const MoviePage: React.FC = () => {
 	const [tab] = useRecoilState(tabState);
 	const [, setMovie] = useRecoilState(movieState);
 	const [modal, setModal] = useRecoilState(modalState);
 	const [scroll, setScroll] = useRecoilState(scrollState);
 	const [locale] = useRecoilState(localeState);
-	const [page] = useRecoilState(pageState);
+	const [page, setPage] = useRecoilState(pageState);
+	const [cardsPerRow, setCardsPerRow] = useState<number>(0);
+	const [movies, setMovies] = useState<any[]>([]);
+
+	useEffect(() => {
+		const updateCardsPerRow = () => {
+			const cardWidth = 200;
+			setCardsPerRow(Math.floor(window.innerWidth / cardWidth) - 1);
+		};
+
+		window.addEventListener("resize", updateCardsPerRow);
+		updateCardsPerRow();
+	}, []);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+		setPage(1);
+		setMovies([]);
+		refetch();
+	}, [tab, locale]);
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY;
@@ -121,7 +128,7 @@ const MoviePage: React.FC = () => {
 		window.scrollTo(0, prevScrollY);
 	};
 
-	const { isLoading, data, refetch } = useQuery(
+	const { isLoading, refetch } = useQuery(
 		tab === "POPULAR"
 			? ["popular", locale, page]
 			: tab === "COMING SOON"
@@ -134,16 +141,21 @@ const MoviePage: React.FC = () => {
 			: ({ queryKey }) => getTMDBNowPlaying(queryKey[1], queryKey[2]),
 		{
 			refetchOnWindowFocus: false,
+			keepPreviousData: true,
 			retry: 0,
-			onSuccess: (data) => {
-				console.log(data.results);
+			onSuccess: (newData) => {
+				setMovies((prevMovies) => {
+					const updatedMovies = [...prevMovies];
+					newData.results.forEach((newMovie: any) => {
+						if (!prevMovies.some((movie) => movie.id === newMovie.id)) {
+							updatedMovies.push(newMovie);
+						}
+					});
+					return updatedMovies;
+				});
 			},
 		}
 	);
-
-	useEffect(() => {
-		refetch();
-	}, [locale]);
 
 	useEffect(() => {
 		if (modal) {
@@ -152,6 +164,20 @@ const MoviePage: React.FC = () => {
 			allowScroll(scroll);
 		}
 	}, [modal, setModal]);
+
+	useEffect(() => {
+		const loadMoreMovies = () => {
+			const { scrollTop, clientHeight, scrollHeight } =
+				document.documentElement;
+
+			if (scrollTop + clientHeight >= scrollHeight - 5) {
+				setPage((prevPage) => prevPage + 1);
+			}
+		};
+
+		window.addEventListener("scroll", loadMoreMovies);
+		return () => window.removeEventListener("scroll", loadMoreMovies);
+	}, []);
 
 	function OpenModal(id: any) {
 		setMovie(id);
@@ -164,14 +190,6 @@ const MoviePage: React.FC = () => {
 		}
 	}
 
-	const item = {
-		hidden: { y: 20, opacity: 0 },
-		visible: {
-			y: 0,
-			opacity: 1,
-		},
-	};
-
 	const img = {
 		whileHover: {
 			scale: 1.1,
@@ -183,15 +201,16 @@ const MoviePage: React.FC = () => {
 
 	return (
 		<>
-			<MovieContainer
-				key={tab}
-				variants={container}
-				initial="hidden"
-				animate="visible"
-				onClick={CloseModal}
-			>
-				{data.results.map((movie: any) => (
-					<Movie key={movie.id} variants={item}>
+			<MovieContainer onClick={CloseModal}>
+				{movies.map((movie: any, index: number) => (
+					<Movie
+						key={movie.id}
+						initial={{ opacity: 0, y: -50 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{
+							delay: Math.max(0, Math.floor(index / cardsPerRow) * 0.6),
+						}}
+					>
 						<ImgHover
 							src={makeImagePath(movie.poster_path)}
 							variants={img}
