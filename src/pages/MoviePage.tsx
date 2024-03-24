@@ -14,6 +14,7 @@ import {
 	localeState,
 	modalState,
 	movieState,
+	pageState,
 	scrollState,
 } from "../state/movieState";
 import MovieDetailPage from "./MovieDetailPage";
@@ -101,6 +102,7 @@ const MoviePage: React.FC = () => {
 	const [modal, setModal] = useRecoilState(modalState);
 	const [scroll, setScroll] = useRecoilState(scrollState);
 	const [locale] = useRecoilState(localeState);
+	const [page] = useRecoilState(pageState);
 
 	const preventScroll = () => {
 		const currentScrollY = window.scrollY;
@@ -121,15 +123,15 @@ const MoviePage: React.FC = () => {
 
 	const { isLoading, data, refetch } = useQuery(
 		tab === "POPULAR"
-			? ["popular", locale]
+			? ["popular", locale, page]
 			: tab === "COMING SOON"
-			? ["coming-soon", locale]
-			: ["now-playing", locale],
+			? ["coming-soon", locale, page]
+			: ["now-playing", locale, page],
 		tab === "POPULAR"
-			? ({ queryKey }) => getTMDBPopular(queryKey[1])
+			? ({ queryKey }) => getTMDBPopular(queryKey[1], queryKey[2])
 			: tab === "COMING SOON"
-			? ({ queryKey }) => getTMDBComingSoon(queryKey[1])
-			: ({ queryKey }) => getTMDBNowPlaying(queryKey[1]),
+			? ({ queryKey }) => getTMDBComingSoon(queryKey[1], queryKey[2])
+			: ({ queryKey }) => getTMDBNowPlaying(queryKey[1], queryKey[2]),
 		{
 			refetchOnWindowFocus: false,
 			retry: 0,
