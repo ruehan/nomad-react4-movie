@@ -128,7 +128,11 @@ const NavBar: React.FC = () => {
 
 	return (
 		<>
-			{isFollow && <FollowMouse />}
+			{isFollow && (
+				<>
+					<FollowMouse />
+				</>
+			)}
 			<Tabs backgroundColor={isDarkMode ? "black" : "white"}>
 				<Tab onClick={easterEgg}>
 					<img
