@@ -106,6 +106,7 @@ const MoviePage: React.FC = () => {
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
+		setPage(1);
 		setMovies([]);
 		refetch();
 	}, [tab, locale]);
