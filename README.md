@@ -1,3 +1,7 @@
+## \* CodeSandBox에서 env 설정을 할 수 없어 아래 배포 페이지를 참고해주세요.
+
+## [Vercel 배포](https://ruehan-nomad-movie.vercel.app/)
+
 # Nomad-React4-Movie App
 
 - [x] Using React Router, React Query, Styled Components and Motion build a movie app
